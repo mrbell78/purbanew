@@ -23,12 +23,15 @@ public interface Api {
     );
 
     @FormUrlEncoded
-    @POST("Order")
+    @POST("Order/")
     Call<ResponseBody> checkout(
           // @Field("productName") String productName,
            // @Field("subtotal") String totalEachItem2,
            // @Field("quantity") String totalEachItem,
-            @Field("grndTotal") Map<String,String> total
+            @Field("productName") String productName,
+            @Field("quantity") String quantity,
+            @Field("custName") String customername,
+            @Field("grndTotal") String grndTotal
 
     );
 

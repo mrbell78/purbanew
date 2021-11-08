@@ -101,45 +101,38 @@ public class checkout_activity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
+                       ArrayList<String>productName= new ArrayList<>();
+                       ArrayList<String>quantity= new ArrayList<>();
+
                         for(int i=0;i<orderItems.size();i++){
 
-                            OrderInfo orderInfo = new OrderInfo(
-                                    ""+ orderItems.get(i).getPro_name(),
-                                    ""+orderItems.get(i).getNumberInCart(),
-                                    ""+orderItems.get(i).getSalePrice(),
-                                    ""+(orderItems.get(i).getNumberInCart()*orderItems.get(i).getSalePrice()),
-                                    ""+totalBalance,
-                                    ""+msg.what
-
-
-                            );
-
-                            String request = new Gson().toJson(orderInfo);
-
-                            Map<String, String> params = new HashMap<String, String>();
-                            params.put("data", request);
-
-
-
-                            Api apicallingjson = retrofit.create(Api.class);
-                            Call<ResponseBody> callcoment = apicallingjson.checkout(params);
-                            callcoment.enqueue(new retrofit2.Callback<ResponseBody>() {
-                                @Override
-                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                    if (response.code() == 200) {
-                                        totalTxt.setText("");
-                                        Toast.makeText(checkout_activity.this, "Successfully Checkout", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(checkout_activity.this, MainActivity.class);
-                                        startActivity(intent);
-                                    }
-                                }
-                                @Override
-                                public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                                }
-                            });
-
+                            productName.add(orderItems.get(i).getPro_name().toString());
+                            quantity.add(String.valueOf(orderItems.get(i).getNumberInCart()));
                         }
+
+                        String pName = new Gson().toJson(productName);
+                        String q = new Gson().toJson(quantity);
+
+                        Log.d(TAG, "onClick: the Pname is"+pName);
+                        Log.d(TAG, "onClick: the q  is"+q);
+
+                        Api apicallingjson = retrofit.create(Api.class);
+                        Call<ResponseBody> callcoment = apicallingjson.checkout(pName,q,String.valueOf(msg.what),String.valueOf(totalBalance));
+                        callcoment.enqueue(new retrofit2.Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if (response.code() == 200) {
+                                    totalTxt.setText("");
+                                    Toast.makeText(checkout_activity.this, "Successfully Checkout", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(checkout_activity.this, MainActivity.class);
+                                    startActivity(intent);
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+                        });
                     }
 
                 });
